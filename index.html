@@ -1,0 +1,17 @@
+<html><body style="background:#0f172a;color:white;font-family:Arial;padding:20px;text-align:center">
+<h1>🏠 My eWeLink Home</h1>
+<div id="s">Loading...</div>
+<div id="g"></div>
+<script>
+async function load(){
+ let r=await fetch('/api/devices'); let d=await r.json();
+ if(d.error){document.getElementById('s').innerText=d.error;return}
+ document.getElementById('s').innerText='Found '+d.length+' devices';
+ let h=''; d.forEach(x=>{
+  h+=`<div style="background:#1e293b;padding:15px;margin:10px;border-radius:10px"><h3>${x.name}</h3><button onclick="c('${x.id}','on')" style="padding:10px 20px;background:green;color:white;border:none;border-radius:8px">ON</button><button onclick="c('${x.id}','off')" style="padding:10px 20px;background:red;color:white;border:none;margin-left:10px;border-radius:8px">OFF</button></div>`;
+ });
+ document.getElementById('g').innerHTML=h;
+}
+async function c(id,a){document.getElementById('s').innerText='Turning '+a+'...'; await fetch('/api/device/'+id+'/'+a,{method:'POST'}); setTimeout(load,1500);}
+load();
+</script></body></html>
