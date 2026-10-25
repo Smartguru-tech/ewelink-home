@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Home</title>
+</head>
+<body style="background:#0f172a;color:white;font-family:Arial;padding:20px;text-align:center">
+<h1>🏠 My eWeLink Home</h1>
+<p id="status">Loading devices...</p>
+<div id="grid"></div>
+<script>
+async function load(){
+ let r=await fetch('/api/devices');
+ let d=await r.json();
+ if(d.error){document.getElementById('status').innerText="Error: "+d.error; return;}
+ document.getElementById('status').innerText='Found '+d.length+' devices';
+ let h='';
+ d.forEach(x=>{
+  h+=`<div style="background:#1e293b;padding:15px;margin:10px auto;max-width:400px;border-radius:12px"><h3>${x.name}</h3><p>${x.online?'🟢 Online':'🔴 Offline'}</p><button onclick="ctrl('${x.id}','on')" style="padding:12px 25px;background:#22c55e;color:white;border:none;border-radius:8px;font-size:16px">ON</button><button onclick="ctrl('${x.id}','off')" style="padding:12px 25px;background:#ef4444;color:white;border:none;margin-left:10px;border-radius:8px;font-size:16px">OFF</button></div>`;
+ });
+ document.getElementById('grid').innerHTML=h;
+}
+async function ctrl(id,action){
+ document.getElementById('status').innerText='Turning '+action+'...';
+ await fetch('/api/device/'+id+'/'+action,{method:'POST'});
+ setTimeout(load,2000);
+}
+load();
+</script>
+</body>
+  </html>
