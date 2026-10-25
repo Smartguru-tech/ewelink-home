@@ -4,8 +4,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const MY_EMAIL = "YOUR EMAIL";
-const MY_PASSWORD = "YOUR PASSWORD";
+const MY_EMAIL = "archassangiwa@gmail.com";
+const MY_PASSWORD = "Giwa@123";
 let conn;
 async function getConn(){
  if(conn) return conn;
